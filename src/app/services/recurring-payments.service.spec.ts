@@ -27,7 +27,6 @@ describe('recurring payments service', () => {
           amount: 100,
           pot: 'foo',
         },
-
         {
           id: '1',
           name: 'Electricity',
