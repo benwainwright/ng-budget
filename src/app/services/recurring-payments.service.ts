@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
 import { RecurringPayment } from '../types/recurring-payment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecurringPaymentsService {
-  private payments: RecurringPayment[] = [];
-  constructor() {}
+  private payments = new Subject<RecurringPayment[]>();
+
+  public constructor() {
+    this.payments.next([]);
+  }
 
   getPayments(): Observable<RecurringPayment[]> {
-    return of(this.payments);
+    return this.payments.asObservable();
   }
 
   setPayments(payments: RecurringPayment[]) {
-    this.payments = payments;
-    return of(void 0);
+    this.payments.next(payments);
   }
 }
