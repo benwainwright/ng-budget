@@ -6,11 +6,9 @@ import { RecurringPayment } from '../types/recurring-payment';
   providedIn: 'root',
 })
 export class RecurringPaymentsService {
-  private payments = new Subject<RecurringPayment[]>();
+  private payments = new BehaviorSubject<RecurringPayment[]>([]);
 
-  public constructor() {
-    this.payments.next([]);
-  }
+  public constructor() {}
 
   getPayments(): Observable<RecurringPayment[]> {
     return this.payments.asObservable();

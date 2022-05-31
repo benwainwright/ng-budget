@@ -1,4 +1,4 @@
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom, take } from 'rxjs';
 import { RecurringPayment } from '../types/recurring-payment';
 import { RecurringPaymentsService } from './recurring-payments.service';
 
@@ -11,7 +11,7 @@ describe('recurring payments service', () => {
     it('should return an empty array as a default value', async () => {
       const service = new RecurringPaymentsService();
 
-      const result = await lastValueFrom(service.getPayments());
+      const result = await lastValueFrom(service.getPayments().pipe(take(1)));
 
       expect(result).toEqual([]);
     });
@@ -25,24 +25,26 @@ describe('recurring payments service', () => {
           name: 'Cleaner',
           when: 'tomorrow',
           amount: 100,
-          pot: 'foo',
+          potId: 'foo',
         },
         {
           id: '1',
           name: 'Electricity',
           when: 'every week',
           amount: 300,
-          pot: 'bar',
+          potId: 'bar',
         },
       ];
 
       const paymentsObservable = service.getPayments();
 
-      expect(await lastValueFrom(paymentsObservable)).toEqual([]);
+      expect(await lastValueFrom(paymentsObservable.pipe(take(1)))).toEqual([]);
 
       service.setPayments(payments);
 
-      expect(await lastValueFrom(paymentsObservable)).toEqual(payments);
+      expect(await lastValueFrom(paymentsObservable.pipe(take(1)))).toEqual(
+        payments
+      );
     });
 
     it('should return the recurring payments that have been set', async () => {
@@ -54,19 +56,19 @@ describe('recurring payments service', () => {
           name: 'Cleaner',
           when: 'tomorrow',
           amount: 100,
-          pot: 'foo',
+          potId: 'foo',
         },
         {
           id: '1',
           name: 'Electricity',
           when: 'every week',
           amount: 300,
-          pot: 'bar',
+          potId: 'bar',
         },
       ];
 
       service.setPayments(payments);
-      const result = await lastValueFrom(service.getPayments());
+      const result = await lastValueFrom(service.getPayments().pipe(take(1)));
 
       expect(result).toEqual(payments);
     });

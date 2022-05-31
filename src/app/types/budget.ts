@@ -1,7 +1,7 @@
 import { PotPlan } from './pot-plan';
 
 export interface Budget {
-  fromDate: Date;
-  toDate: Date;
+  startDate: Date;
+  endDate: Date;
   potPlans: PotPlan[];
 }

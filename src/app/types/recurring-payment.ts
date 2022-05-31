@@ -2,6 +2,6 @@ export interface RecurringPayment {
   id: string;
   name: string;
   when: string;
-  pot: string;
+  potId: string;
   amount: number;
 }

@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+
+interface Settings {
+  overdraft: number;
+  nextPayday: Date;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -7,24 +12,17 @@ import { Observable, of } from 'rxjs';
 export class SettingsService {
   constructor() {}
 
-  private overdraft: number = 0;
-  private nextPayday: Date = new Date(Date.now());
+  private settings = new BehaviorSubject<Settings>({
+    overdraft: 0,
+    nextPayday: new Date(Date.now()),
+  });
 
-  getNextPayday(): Observable<Date> {
-    return of(this.nextPayday);
+  getSettings(): Observable<Settings> {
+    return this.settings.asObservable();
   }
 
-  setNextPayday(day: Date): Observable<void> {
-    this.nextPayday = day;
-    return of(void 0);
-  }
-
-  getOverdraft(): Observable<number> {
-    return of(this.overdraft);
-  }
-
-  setOverdraft(amount: number): Observable<void> {
-    this.overdraft = amount;
-    return of(void 0);
+  setSettings(settings: Partial<Settings>) {
+    const nextSettings = { ...this.settings.value, ...settings };
+    this.settings.next(nextSettings);
   }
 }

@@ -1,6 +1,6 @@
 import { ConcretePayment } from './concrete-payment';
+import { Pot } from './pot';
 
-export interface PotPlan {
-  startingBalance: number;
+export type PotPlan = Pot & {
   payments: ConcretePayment[];
-}
+};
