@@ -8,6 +8,8 @@ import { RecurringPayment } from '../types/recurring-payment';
 import { BalanceService } from './balance.service';
 import { PotsService } from './pots.service';
 import { RecurringPaymentsService } from './recurring-payments.service';
+import { v4 } from 'uuid';
+import { ConcretePayment } from '../types/concrete-payment';
 
 interface InitialBudgetInput {
   startDate: Date;
@@ -41,7 +43,15 @@ export class BudgetService {
       balancePromise,
     ]);
 
-    this.generateBudget(input, payments, balance, pots);
+    const distributedPayments = this.distributePayments(input, payments, pots);
+
+    this.updateBudget(
+      v4(),
+      distributedPayments,
+      balance,
+      input.startDate,
+      input.endDate
+    );
   }
 
   private distributePayments(
@@ -81,13 +91,13 @@ export class BudgetService {
     }));
   }
 
-  private generateBudget(
-    input: InitialBudgetInput,
-    recurringPayments: RecurringPayment[],
+  private updateBudget(
+    id: string,
+    payments: Omit<PotPlan, 'adjustmentAmount'>[],
     balance: number,
-    pots: Pot[]
+    startDate: Date,
+    endDate: Date
   ) {
-    const payments = this.distributePayments(input, recurringPayments, pots);
     const potPlans = this.hydratePotplanAdjustments(payments);
 
     const surplus = potPlans.reduce(
@@ -96,14 +106,22 @@ export class BudgetService {
     );
 
     const budget = {
-      startDate: input.startDate,
-      endDate: input.endDate,
+      id,
+      startDate,
+      endDate,
       potPlans,
       surplus,
     };
 
     const budgets = this.budgets.value;
-    this.budgets.next([...budgets, budget]);
+
+    const existingBudget = budgets.findIndex((budget) => budget.id === id);
+    if (existingBudget !== -1) {
+      budgets[existingBudget] = budget;
+      this.budgets.next(budgets);
+    } else {
+      this.budgets.next([...budgets, budget]);
+    }
   }
 
   getBudget(): Observable<Budget[]> {

@@ -1,11 +1,13 @@
-import { ConcretePayment } from './concrete-payment';
 import { PotPlan } from './pot-plan';
 
 export interface PaymentPlan {
-  potPlans: { payments: ConcretePayment[] }[];
+  startDate: Date;
+  endDate: Date;
+  potPlans: PotPlan[];
 }
 
 export interface Budget {
+  id: string;
   startDate: Date;
   endDate: Date;
   potPlans: PotPlan[];
