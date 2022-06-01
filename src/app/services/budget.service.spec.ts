@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { lastValueFrom, Observable, of, take } from 'rxjs';
+import { date } from '../lib/date';
 import { Pot } from '../types/pot';
 import { BalanceService } from './balance.service';
 
@@ -67,16 +68,6 @@ class MockRecurringPaymentsService {
     ]);
   }
 }
-
-const date = (day: number, month: number, year: number) => {
-  const theDate = new Date();
-
-  theDate.setDate(day);
-  theDate.setMonth(month - 1);
-  theDate.setFullYear(year);
-
-  return theDate;
-};
 
 const expectSameDate = (dateOne: Date, dateTwo: Date) => {
   expect(dateOne.getDate()).toEqual(dateTwo.getDate());

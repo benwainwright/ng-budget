@@ -45,9 +45,12 @@ const recurrance = (text: string, to: Date, from?: Date) => {
 };
 
 export const getDates = (text: string, to: Date, from?: Date, max?: number) => {
+  console.log('here');
   const all = recurrance(text, to, from);
+  console.log(all);
   if (all.length === 0) {
-    const result = chrono.parseDate(text);
+    console.log('here 2');
+    const result = chrono.parseDate(text, undefined, { forwardDate: true });
     return result ? [result] : [];
   }
   return max === undefined ? all : all.slice(0, max);
