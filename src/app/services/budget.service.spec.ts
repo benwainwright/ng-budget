@@ -115,6 +115,7 @@ describe('BudgetService', () => {
     expectSameDate(first.payments[1].when, date(6, 6, 2022));
 
     const second = budget[0].potPlans[1];
+
     expect(second.payments.length).toEqual(5);
 
     expectSameDate(second.payments[0].when, date(1, 6, 2022));

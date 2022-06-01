@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { lastValueFrom, BehaviorSubject, Observable, take } from 'rxjs';
+import { uuid } from '../lib/uuid';
 import { getDates } from '../lib/get-dates';
 import { Budget, PaymentPlan } from '../types/budget';
 import { Pot } from '../types/pot';
@@ -8,8 +9,6 @@ import { RecurringPayment } from '../types/recurring-payment';
 import { BalanceService } from './balance.service';
 import { PotsService } from './pots.service';
 import { RecurringPaymentsService } from './recurring-payments.service';
-import { v4 } from 'uuid';
-import { ConcretePayment } from '../types/concrete-payment';
 
 interface InitialBudgetInput {
   startDate: Date;
@@ -46,7 +45,7 @@ export class BudgetService {
     const distributedPayments = this.distributePayments(input, payments, pots);
 
     this.updateBudget(
-      v4(),
+      uuid(),
       distributedPayments,
       balance,
       input.startDate,
