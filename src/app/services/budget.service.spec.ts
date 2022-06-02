@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { lastValueFrom, Observable, of, take } from 'rxjs';
-import { date } from '../lib/date';
-import { Pot } from '../types/pot';
+import { date } from '../../lib/date';
+import { Pot } from '../../types/pot';
 import { BalanceService } from './balance.service';
 
 import { BudgetService } from './budget.service';

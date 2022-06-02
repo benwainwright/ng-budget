@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Pot } from '../types/pot';
+import { Pot } from '../../types/pot';
 
 @Injectable({
   providedIn: 'root',

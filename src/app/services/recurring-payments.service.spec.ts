@@ -1,5 +1,5 @@
 import { firstValueFrom, lastValueFrom, take } from 'rxjs';
-import { RecurringPayment } from '../types/recurring-payment';
+import { RecurringPayment } from '../../types/recurring-payment';
 import { RecurringPaymentsService } from './recurring-payments.service';
 
 describe('recurring payments service', () => {
