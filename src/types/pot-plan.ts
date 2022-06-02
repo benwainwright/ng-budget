@@ -1,7 +1,7 @@
-import { ConcretePayment } from './concrete-payment';
-import { Pot } from './pot';
+import { ConcretePayment } from './concrete-payment'
+import { Pot } from './pot'
 
 export type PotPlan = Pot & {
-  payments: ConcretePayment[];
-  adjustmentAmount: number;
-};
+    payments: ConcretePayment[]
+    adjustmentAmount: number
+}

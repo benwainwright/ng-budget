@@ -1,7 +1,7 @@
 export interface RecurringPayment {
-  id: string;
-  name: string;
-  when: string;
-  potId: string;
-  amount: number;
+    id: string
+    name: string
+    when: string
+    potId: string
+    amount: number
 }

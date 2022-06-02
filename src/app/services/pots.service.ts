@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Pot } from '../../types/pot';
+import { Injectable } from '@angular/core'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { Pot } from '../../types/pot'
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class PotsService {
-  constructor() {}
+    constructor() {}
 
-  private pots = new BehaviorSubject<Pot[]>([]);
+    private pots = new BehaviorSubject<Pot[]>([])
 
-  getPots(): Observable<Pot[]> {
-    return this.pots.asObservable();
-  }
+    getPots(): Observable<Pot[]> {
+        return this.pots.asObservable()
+    }
 }
