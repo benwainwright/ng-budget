@@ -1,6 +1,5 @@
 // jest.config.js
 module.exports = {
-  preset: "jest-preset-angular",
   collectCoverageFrom: ["<rootDir>/src/**"],
   coveragePathIgnorePatterns: [
     "<rootDir>/src/main.ts",
@@ -8,7 +7,12 @@ module.exports = {
     "<rootDir>/src/index.html",
   ],
   setupFilesAfterEnv: ["<rootDir>/setup-jest.ts"],
-  globalSetup: "jest-preset-angular/global-setup",
+  transformIgnorePatterns: ["/node_modules/(?!tslib|.*mjs)"],
+  testEnvironment: "jsdom",
+  transform: {
+    "^.+\\.(mjs|js|ts|html|svg)$": "jest-preset-angular",
+  },
+  extensionsToTreatAsEsm: [".ts"],
   globals: {
     "ts-jest": {
       tsconfig: "<rootDir>/tsconfig.spec.json",
