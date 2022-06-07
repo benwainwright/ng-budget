@@ -37,12 +37,59 @@ describe('get dates', () => {
     })
 
     it.each([
+        ['16th of august'],
+        ['sixteenth of august'],
+        ['sixteenth august'],
+        ['the 16th of August'],
+        ['16/8'],
+        ['16/8'],
+        ['16/08/2022'],
+        ['16/08/22'],
+    ])(
+        "identifies specific dates that are not in the same month as the start date from '%s",
+        (string) => {
+            const dates = getDates(string, {
+                from: date(1, 6, 2022),
+                to: date(25, 8, 2022),
+            })
+
+            expect(dates).toHaveLength(1)
+            expect(dates[0]).toBeSameDayAs(date(16, 8, 2022))
+        }
+    )
+
+    it.each([
+        ['sixteenth'],
+        ['on the sixteenth'],
+        ['on the 16th'],
+        ['16th'],
+        ['the 16th'],
+        ['16th of every month'],
+        ['every month on the 16th'],
+    ])(
+        "picks out multiple dates if there is no month specified and the range contains more than one of that date from '%s'",
+        (string) => {
+            const dates = getDates(string, {
+                from: date(1, 6, 2022),
+                to: date(25, 8, 2022),
+            })
+
+            expect(dates).toHaveLength(3)
+            expect(dates[0]).toBeSameDayAs(date(16, 6, 2022))
+            expect(dates[1]).toBeSameDayAs(date(16, 7, 2022))
+            expect(dates[2]).toBeSameDayAs(date(16, 8, 2022))
+        }
+    )
+
+    it.each([
         ['16th of june'],
         ['sixteenth of june'],
         ['sixteenth june'],
-        ['on the 16th'],
-        ['16th'],
         ['the 16th of June'],
+        ['16/6'],
+        ['16/06'],
+        ['16/06/2022'],
+        ['16/06/22'],
     ])("correctly identifies specific dates from '%s'", (string) => {
         const dates = getDates(string, {
             from: date(1, 6, 2022),

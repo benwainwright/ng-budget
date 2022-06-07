@@ -79,15 +79,19 @@ const getThingIndex = (
         )
     )
 
+    console.log(weekDay)
+
     return weekDay !== -1 ? weekDay : defaultValue
 }
 const REGEXES = {
     onWeekday: /on\s+(?<weekDay>\w+)s/,
     everyWeek: /(each|every)\s+week(?:\son\s+(?<weekDay>\w+))?/,
-    everySpecificWeekday: /(each|every)\s+(?<weekDay>\w+)/,
-    wordOfMonth: /(?<day>\w+)(?:\sof\s+(?<month>\w+))?(?:\s+(?<year>\d{4}))?/,
+    everySpecificWeekday: /(each|every)\s+(?!month)(?<weekDay>\w+)/,
+    wordOfMonth: /(?<day>\w+)(?:(\sof)?\s+(?<month>\w+))(?:\s+(?<year>\d{4}))?/,
+    daySlashMonth: /(?<day>\d{1,2})\/(?<month>\d{1,2})/,
     thOfMonth:
-        /(?<day>\d{1,2})(th|st|nd)(?:\sof\s+(?<month>\w+))?(?:\s+(?<year>\d{4}))?/,
+        /(?<day>\d{1,2})(th|st|nd)(?:(\sof)?\s+(?<month>\w+))(?:\s+(?<year>\d{4}))?/,
+    thOnly: /(?<day>\w)/,
 }
 
 const everyWeek = (text: string, from: Date, to: Date) => {
@@ -109,12 +113,41 @@ const everyWeek = (text: string, from: Date, to: Date) => {
     )
 }
 
-const specificDate = (text: string, from: Date, to: Date) => {
+const specificDateOfAnyMonth = (text: string, from: Date, to: Date) => {
+    const result = new RegExp(REGEXES.thOnly, 'gi').exec(text)
+
+    if (!result) {
+        return undefined
+    }
+
+    const day = result.groups?.['day']
+
+    const parsedDay = day && getThingIndex(day, wordNumbers, Number(day))
+
+    return getDaysInBetween(from, to).filter((date) => {
+        return date.getDate() === parsedDay
+    })
+}
+
+const parseMonth = (month: string | undefined, from: Date) => {
+    if (!month) {
+        return undefined
+    }
+
+    const numberMonth = Number(month)
+
+    if (Number.isNaN(numberMonth)) {
+        return getThingIndex(month, months, from.getMonth())
+    }
+
+    return numberMonth - 1
+}
+
+const specificDateOfAnyYear = (text: string, from: Date, to: Date) => {
     const result =
         new RegExp(REGEXES.thOfMonth, 'gi').exec(text) ??
-        new RegExp(REGEXES.wordOfMonth, 'gi').exec(text)
-
-    console.log(result)
+        new RegExp(REGEXES.wordOfMonth, 'gi').exec(text) ??
+        new RegExp(REGEXES.daySlashMonth, 'gi').exec(text)
 
     if (!result) {
         return undefined
@@ -126,11 +159,19 @@ const specificDate = (text: string, from: Date, to: Date) => {
 
     const parsedDay = day && getThingIndex(day, wordNumbers, Number(day))
 
-    const parsedMonth = month
-        ? getThingIndex(month, months, from.getMonth())
-        : undefined
+    if (['every', 'each'].includes(month?.toLowerCase() ?? '')) {
+        return undefined
+    }
+
+    const parsedMonth = parseMonth(month, from)
+
+    console.log('month', parsedMonth)
 
     const parsedYear = year ? Number(year) : undefined
+
+    console.log('day', parsedDay)
+    console.log('month', parsedMonth)
+    console.log('year', parsedYear)
 
     return getDaysInBetween(from, to).filter((date) => {
         return (
@@ -152,5 +193,10 @@ const dates = (options?: GetDatesOptions): [Date, Date] => {
 export const getDates = (text: string, options?: GetDatesOptions) => {
     const [from, to] = dates(options)
 
-    return everyWeek(text, from, to) ?? specificDate(text, from, to) ?? []
+    return (
+        everyWeek(text, from, to) ??
+        specificDateOfAnyYear(text, from, to) ??
+        specificDateOfAnyMonth(text, from, to) ??
+        []
+    )
 }
