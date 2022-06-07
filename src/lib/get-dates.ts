@@ -83,15 +83,21 @@ const getThingIndex = (
 
     return weekDay !== -1 ? weekDay : defaultValue
 }
+
+const weekDayOptions = weekDays.flat().join(`|`)
+const monthOptions = months.flat().join('|')
+const dayOptions = wordNumbers.flat().join('|')
+
 const REGEXES = {
-    onWeekday: /on\s+(?<weekDay>\w+)s/,
-    everyWeek: /(each|every)\s+week(?:\son\s+(?<weekDay>\w+))?/,
-    everySpecificWeekday: /(each|every)\s+(?!month)(?<weekDay>\w+)/,
-    wordOfMonth: /(?<day>\w+)(?:(\sof)?\s+(?<month>\w+))(?:\s+(?<year>\d{4}))?/,
-    daySlashMonth: /(?<day>\d{1,2})\/(?<month>\d{1,2})/,
+    onWeekday: `on\\s+(?<weekDay>(?:${weekDayOptions})+)s`,
+    everyWeek: `(each|every)\\s+week(?:\\son\\s+(?<weekDay>(?:${weekDayOptions})))?`,
+    everySpecificWeekday: `(each|every)\\s+(?<weekDay>(?:${weekDayOptions}))\\b`,
+    wordOfMonth: `(?<day>${dayOptions})(?:(\\sof)?\\s+(?<month>(?:${monthOptions})))(?:\\s+(?<year>\\d{4}))?`,
+    daySlashMonth: `(?<day>\\d{1,2})\\/(?<month>\\d{1,2})`,
     thOfMonth:
-        /(?<day>\d{1,2})(th|st|nd)(?:(\sof)?\s+(?<month>\w+))(?:\s+(?<year>\d{4}))?/,
-    thOnly: /(?<day>\w)/,
+        `(?<day>\\d{1,2})(th|st|nd)(?:(\\sof)?\\s+(?<month>(?:${monthOptions})))(?:\\s+(?<year>\\d{4}))?`,
+    thOnlyWord: `(?<day>(?:${dayOptions}))`,
+    thOnlyNumber: `(?<day>\\d{1,2})(th|st|nd)`,
 }
 
 const everyWeek = (text: string, from: Date, to: Date) => {
@@ -114,7 +120,8 @@ const everyWeek = (text: string, from: Date, to: Date) => {
 }
 
 const specificDateOfAnyMonth = (text: string, from: Date, to: Date) => {
-    const result = new RegExp(REGEXES.thOnly, 'gi').exec(text)
+    const result = new RegExp(REGEXES.thOnlyNumber, 'gi').exec(text) ??
+                   new RegExp(REGEXES.thOnlyWord, 'gi').exec(text)
 
     if (!result) {
         return undefined
