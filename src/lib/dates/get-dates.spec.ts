@@ -36,7 +36,21 @@ describe('get dates', () => {
         expect(dates[4]).toBeSameDayAs(date(30, 6, 2022))
     })
 
+    it.each([['on the third of june'], ['on the 3rd of june']])(
+        "identifies the correct date for '%s'",
+        (string) => {
+            const dates = getDates(string, {
+                from: date(31, 5, 2022),
+                to: date(30, 6, 2022),
+            })
+
+            expect(dates).toHaveLength(1)
+            expect(dates[0]).toBeSameDayAs(date(3, 6, 2022))
+        }
+    )
+
     it.each([
+        ['on the 16th of august'],
         ['16th of august'],
         ['sixteenth of august'],
         ['sixteenth august'],

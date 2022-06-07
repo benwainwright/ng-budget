@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { lastValueFrom, BehaviorSubject, Observable, take } from 'rxjs'
 import { uuid } from '../../lib/uuid'
-import { getDates } from '../../lib/get-dates'
+import { getDates } from '../../lib/dates/get-dates'
 import { Budget, PaymentPlan } from '../../types/budget'
 import { Pot } from '../../types/pot'
 import { PotPlan } from '../../types/pot-plan'
