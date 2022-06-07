@@ -11,6 +11,65 @@ describe('get dates', () => {
         jest.useRealTimers()
     })
 
+    it.each(['every other thursday', 'every other week on thurs'])(
+        "can handle alternating weeks from '%s'",
+        (string) => {
+            const result = getDates(string, {
+                from: date(1, 6, 2022),
+                to: date(1, 7, 2022),
+            })
+
+            expect(result.type).toEqual('EveryWeek')
+            expect(result.dates).toHaveLength(3)
+            expect(result.dates[0]).toBeSameDayAs(date(2, 6, 2022))
+            expect(result.dates[1]).toBeSameDayAs(date(16, 6, 2022))
+            expect(result.dates[2]).toBeSameDayAs(date(30, 6, 2022))
+        }
+    )
+
+    it.each(['third thursday of every month'])(
+        "can handle weekdays of months from '%s'",
+        (string) => {
+            const result = getDates(string, {
+                from: date(1, 6, 2022),
+                to: date(1, 7, 2022),
+            })
+
+            expect(result.type).toEqual('EveryWeek')
+            expect(result.dates).toHaveLength(1)
+            expect(result.dates[0]).toBeSameDayAs(date(16, 6, 2022))
+        }
+    )
+
+    it.each(['last thursday of every month'])(
+        "can handle weekdays of months from '%s'",
+        (string) => {
+            const result = getDates(string, {
+                from: date(1, 6, 2022),
+                to: date(1, 7, 2022),
+            })
+
+            expect(result.type).toEqual('EveryWeek')
+            expect(result.dates).toHaveLength(1)
+            expect(result.dates[0]).toBeSameDayAs(date(30, 6, 2022))
+        }
+    )
+
+    it.each(['every third thursday'])(
+        "can handle alternating weeks from '%s'",
+        (string) => {
+            const result = getDates(string, {
+                from: date(1, 6, 2022),
+                to: date(1, 7, 2022),
+            })
+
+            expect(result.type).toEqual('EveryWeek')
+            expect(result.dates).toHaveLength(2)
+            expect(result.dates[0]).toBeSameDayAs(date(2, 6, 2022))
+            expect(result.dates[1]).toBeSameDayAs(date(23, 6, 2022))
+        }
+    )
+
     it.each([
         ['every week on thursday'],
         ['every Week on thursday'],

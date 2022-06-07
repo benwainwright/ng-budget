@@ -1,5 +1,6 @@
 import { everyWeek } from './every-week'
 import { now } from './now'
+import { numberedWeekday } from './nth-weekday'
 import { specificDateOfAnyMonth } from './specific-date-of-any-month'
 import { specificDateOfAnyYear } from './specific-date-of-any-year'
 
@@ -22,6 +23,12 @@ export const getDates = (text: string, options?: GetDatesOptions) => {
 
     if (everyWeekResult) {
         return everyWeekResult
+    }
+
+    const numberedWeekdayResult = numberedWeekday(text, from, to)
+
+    if (numberedWeekdayResult) {
+        return numberedWeekdayResult
     }
 
     const specificDateOfAnyYearResult = specificDateOfAnyYear(text, from, to)
