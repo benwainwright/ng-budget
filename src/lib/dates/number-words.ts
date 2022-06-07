@@ -28,7 +28,7 @@ export const wordNumbers = [
     ['twentyfifth', 'twenty-fifth'],
     ['twentysixth', 'twenty-sixth'],
     ['twentyseventh', 'twenty-seventh'],
-    ['twentyeight', 'twenty-eight'],
+    ['twentyeighth', 'twenty-eighth'],
     ['twentyninth', 'twenty-ninth'],
     ['thirtieth'],
     ['thirtyfirst', 'thirty-first'],

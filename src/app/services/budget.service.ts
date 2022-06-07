@@ -72,7 +72,7 @@ export class BudgetService {
                     getDates(payment.when, {
                         from: input.startDate,
                         to: input.endDate,
-                    }).map((date, index) => ({
+                    }).dates.map((date, index) => ({
                         id: `${payment.id}-${index}`,
                         name: payment.name,
                         when: date,

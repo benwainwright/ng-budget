@@ -18,10 +18,26 @@ const dates = (options?: GetDatesOptions): [Date, Date] => {
 export const getDates = (text: string, options?: GetDatesOptions) => {
     const [from, to] = dates(options)
 
-    return (
-        everyWeek(text, from, to) ??
-        specificDateOfAnyYear(text, from, to) ??
-        specificDateOfAnyMonth(text, from, to) ??
-        []
-    )
+    const everyWeekResult = everyWeek(text, from, to)
+
+    if (everyWeekResult) {
+        return everyWeekResult
+    }
+
+    const specificDateOfAnyYearResult = specificDateOfAnyYear(text, from, to)
+
+    if (specificDateOfAnyYearResult) {
+        return specificDateOfAnyYearResult
+    }
+
+    const specificDateOfAnyMonthResult = specificDateOfAnyMonth(text, from, to)
+
+    if (specificDateOfAnyMonthResult) {
+        return specificDateOfAnyMonthResult
+    }
+
+    return {
+        type: 'None',
+        dates: [],
+    }
 }

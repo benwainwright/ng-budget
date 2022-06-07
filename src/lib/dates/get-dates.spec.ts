@@ -23,29 +23,45 @@ describe('get dates', () => {
         ['every thur'],
         ['on thursdays'],
     ])("correctly identifies repitition from '%s'", (string) => {
-        const dates = getDates(string, {
+        const result = getDates(string, {
             from: date(1, 6, 2022),
             to: date(1, 7, 2022),
         })
 
-        expect(dates).toHaveLength(5)
-        expect(dates[0]).toBeSameDayAs(date(2, 6, 2022))
-        expect(dates[1]).toBeSameDayAs(date(9, 6, 2022))
-        expect(dates[2]).toBeSameDayAs(date(16, 6, 2022))
-        expect(dates[3]).toBeSameDayAs(date(23, 6, 2022))
-        expect(dates[4]).toBeSameDayAs(date(30, 6, 2022))
+        expect(result.type).toEqual('EveryWeek')
+        expect(result.dates).toHaveLength(5)
+        expect(result.dates[0]).toBeSameDayAs(date(2, 6, 2022))
+        expect(result.dates[1]).toBeSameDayAs(date(9, 6, 2022))
+        expect(result.dates[2]).toBeSameDayAs(date(16, 6, 2022))
+        expect(result.dates[3]).toBeSameDayAs(date(23, 6, 2022))
+        expect(result.dates[4]).toBeSameDayAs(date(30, 6, 2022))
     })
 
     it.each([['on the third of june'], ['on the 3rd of june']])(
         "identifies the correct date for '%s'",
         (string) => {
-            const dates = getDates(string, {
+            const result = getDates(string, {
                 from: date(31, 5, 2022),
                 to: date(30, 6, 2022),
             })
 
-            expect(dates).toHaveLength(1)
-            expect(dates[0]).toBeSameDayAs(date(3, 6, 2022))
+            expect(result.type).toEqual('SpecificDateOfYear')
+            expect(result.dates).toHaveLength(1)
+            expect(result.dates[0]).toBeSameDayAs(date(3, 6, 2022))
+        }
+    )
+
+    it.each([['28th of jan'], ['twenty-eighth of jan']])(
+        "identifies the correct date for '%s'",
+        (string) => {
+            const result = getDates(string, {
+                from: date(1, 6, 2022),
+                to: date(10, 3, 2023),
+            })
+
+            expect(result.type).toEqual('SpecificDateOfYear')
+            expect(result.dates).toHaveLength(1)
+            expect(result.dates[0]).toBeSameDayAs(date(28, 1, 2023))
         }
     )
 
@@ -62,13 +78,14 @@ describe('get dates', () => {
     ])(
         "identifies specific dates that are not in the same month as the start date from '%s",
         (string) => {
-            const dates = getDates(string, {
+            const result = getDates(string, {
                 from: date(1, 6, 2022),
                 to: date(25, 8, 2022),
             })
 
-            expect(dates).toHaveLength(1)
-            expect(dates[0]).toBeSameDayAs(date(16, 8, 2022))
+            expect(result.type).toEqual('SpecificDateOfYear')
+            expect(result.dates).toHaveLength(1)
+            expect(result.dates[0]).toBeSameDayAs(date(16, 8, 2022))
         }
     )
 
@@ -83,15 +100,16 @@ describe('get dates', () => {
     ])(
         "picks out multiple dates if there is no month specified and the range contains more than one of that date from '%s'",
         (string) => {
-            const dates = getDates(string, {
+            const result = getDates(string, {
                 from: date(1, 6, 2022),
                 to: date(25, 8, 2022),
             })
 
-            expect(dates).toHaveLength(3)
-            expect(dates[0]).toBeSameDayAs(date(16, 6, 2022))
-            expect(dates[1]).toBeSameDayAs(date(16, 7, 2022))
-            expect(dates[2]).toBeSameDayAs(date(16, 8, 2022))
+            expect(result.type).toEqual('SpecificDateOfMonth')
+            expect(result.dates).toHaveLength(3)
+            expect(result.dates[0]).toBeSameDayAs(date(16, 6, 2022))
+            expect(result.dates[1]).toBeSameDayAs(date(16, 7, 2022))
+            expect(result.dates[2]).toBeSameDayAs(date(16, 8, 2022))
         }
     )
 
@@ -105,12 +123,26 @@ describe('get dates', () => {
         ['16/06/2022'],
         ['16/06/22'],
     ])("correctly identifies specific dates from '%s'", (string) => {
-        const dates = getDates(string, {
+        const result = getDates(string, {
             from: date(1, 6, 2022),
             to: date(1, 7, 2022),
         })
 
-        expect(dates).toHaveLength(1)
-        expect(dates[0]).toBeSameDayAs(date(16, 6, 2022))
+        expect(result.type).toEqual('SpecificDateOfYear')
+        expect(result.dates).toHaveLength(1)
+        expect(result.dates[0]).toBeSameDayAs(date(16, 6, 2022))
     })
+
+    it.each(['foo', '', 'asfdasd', 'alex'])(
+        "should return an empty erry for strings it doesn't understand '%s'",
+        (string) => {
+            const result = getDates(string, {
+                from: date(1, 6, 2022),
+                to: date(25, 8, 2022),
+            })
+
+            expect(result.type).toEqual('None')
+            expect(result.dates).toHaveLength(0)
+        }
+    )
 })

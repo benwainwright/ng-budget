@@ -1,6 +1,6 @@
 export const getOrdinalIndex = (
     text: string,
-    options: string[][],
+    options: ReadonlyArray<ReadonlyArray<string>>,
     defaultValue: number
 ) => {
     const index = options.findIndex((ordinalList) =>

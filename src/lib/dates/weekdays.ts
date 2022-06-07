@@ -6,4 +6,6 @@ export const weekDays = [
     ['thursday', 'thurs', 'thur'],
     ['friday', 'fri'],
     ['saturday', 'sat'],
-]
+] as const
+
+export type WeekDays = typeof weekDays[number][0]
