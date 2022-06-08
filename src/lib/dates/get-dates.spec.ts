@@ -35,7 +35,7 @@ describe('get dates', () => {
                 to: date(1, 7, 2022),
             })
 
-            expect(result.type).toEqual('EveryWeek')
+            expect(result.type).toEqual('NumberedWeekdayOfMonth')
             expect(result.dates).toHaveLength(1)
             expect(result.dates[0]).toBeSameDayAs(date(16, 6, 2022))
         }
@@ -49,7 +49,7 @@ describe('get dates', () => {
                 to: date(1, 7, 2022),
             })
 
-            expect(result.type).toEqual('EveryWeek')
+            expect(result.type).toEqual('NumberedWeekdayOfMonth')
             expect(result.dates).toHaveLength(1)
             expect(result.dates[0]).toBeSameDayAs(date(30, 6, 2022))
         }

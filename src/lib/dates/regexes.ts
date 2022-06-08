@@ -12,7 +12,7 @@ const nthOptions = ['last', ...wordNumbers.slice(0, 5)].join('|')
 export const REGEXES = {
     onWeekday: `on\\s+(?<weekDay>(?:${weekDayOptions})+)s`,
     everyWeek: `(each|every)\\s+(?:(?<alternating>${alternatingOptions})?\\s+)?week(?:\\son\\s+(?<weekDay>(?:${weekDayOptions})))?`,
-    nthWeekDay: `(?<which>${nthOptions})\\s+(?<weekDay>${weekDayOptions})(?:of\\s+(each|every)\\s+month)?`,
+    nthWeekDay: `(?<which>${nthOptions})\\s+(?<weekDay>${weekDayOptions})(?:of\\s+(each|every)\\s+month)?$`,
     nthWeekDayWithMonth: `(?<which>${nthOptions})\\s+(?<weekDay>${weekDayOptions})(?:of\\s+(?:(each|every)\\s+)?(?<month>${monthOptions}))?`,
     everySpecificWeekday: `(each|every)\\s+(?:(?<alternating>${alternatingOptions})?\\s+)?(?<weekDay>(?:${weekDayOptions}))\\b`,
     wordOfMonth: `(?<day>${dayOptions})(?:(\\sof)?\\s+(?<month>(?:${monthOptions})))(?:\\s+(?<year>\\d{4}))?`,
