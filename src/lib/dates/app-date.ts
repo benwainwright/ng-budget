@@ -28,7 +28,8 @@ export class AppDate {
     }
 
     /*
-     * Implementation from StackOverflow https://stackoverflow.com/a/39502645/3104399
+     * Implementation from StackOverflow:
+     *   https://stackoverflow.com/a/39502645/3104399
      */
     public getWeekNumber(): number {
         const target = new Date(this.date.valueOf())
