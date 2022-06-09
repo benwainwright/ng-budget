@@ -60,13 +60,13 @@ describe('get dates', () => {
         (string) => {
             const result = getDates(string, {
                 from: date(1, 6, 2022),
-                to: date(1, 7, 2022),
+                to: date(15, 7, 2022),
             })
 
             expect(result.type).toEqual('EveryWeek')
             expect(result.dates).toHaveLength(2)
-            expect(result.dates[0]).toBeSameDayAs(date(2, 6, 2022))
-            expect(result.dates[1]).toBeSameDayAs(date(23, 6, 2022))
+            expect(result.dates[0]).toBeSameDayAs(date(16, 6, 2022))
+            expect(result.dates[1]).toBeSameDayAs(date(7, 7, 2022))
         }
     )
 
@@ -148,6 +148,29 @@ describe('get dates', () => {
         }
     )
 
+    it('alternate days should be based on ISO 8601 week of year', () => {
+        const result = getDates('every other thursday', {
+            from: date(1, 6, 2022),
+            to: date(1, 7, 2022),
+        })
+
+        expect(result.type).toEqual('EveryWeek')
+        expect(result.dates).toHaveLength(3)
+        expect(result.dates[0]).toBeSameDayAs(date(2, 6, 2022))
+        expect(result.dates[1]).toBeSameDayAs(date(16, 6, 2022))
+        expect(result.dates[2]).toBeSameDayAs(date(30, 6, 2022))
+
+        const nextResult = getDates('every other thursday', {
+            from: date(8, 6, 2022),
+            to: date(1, 7, 2022),
+        })
+
+        expect(nextResult.type).toEqual('EveryWeek')
+        expect(nextResult.dates).toHaveLength(2)
+        expect(nextResult.dates[0]).toBeSameDayAs(date(16, 6, 2022))
+        expect(nextResult.dates[1]).toBeSameDayAs(date(30, 6, 2022))
+    })
+
     it.each([
         ['sixteenth'],
         ['on the sixteenth'],
@@ -163,6 +186,8 @@ describe('get dates', () => {
                 from: date(1, 6, 2022),
                 to: date(25, 8, 2022),
             })
+
+            result.dates[0]
 
             expect(result.type).toEqual('SpecificDateOfMonth')
             expect(result.dates).toHaveLength(3)

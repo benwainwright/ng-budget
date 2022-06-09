@@ -1,3 +1,4 @@
+import { AppDate } from './app-date'
 import { ParseResult } from './get-dates-type'
 import { getDaysInBetween } from './get-days-in-between'
 import { getOrdinalIndex } from './get-ordinal-index'
@@ -21,7 +22,6 @@ export const everyWeek = (
         new RegExp(REGEXES.everyWeek, 'gi').exec(text) ??
         new RegExp(REGEXES.everySpecificWeekday, 'gi').exec(text) ??
         new RegExp(REGEXES.onWeekday, 'gi').exec(text)
-    console.log(REGEXES.everyWeek)
 
     if (!everyWeekResult) {
         return undefined
@@ -40,7 +40,10 @@ export const everyWeek = (
 
     const allDates = getDaysInBetween(from, to)
         .filter((date) => date.getDay() === weekDay)
-        .filter((item, index) => index % alternatingNumber === 0)
+        .filter((item, index) => {
+            const appDate = AppDate.create(item)
+            return appDate.getWeekNumber() % alternatingNumber === 0
+        })
 
     return {
         type: 'EveryWeek',

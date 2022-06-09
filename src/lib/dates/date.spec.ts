@@ -1,6 +1,6 @@
 import { date } from './date'
 
-describe('date', () => {
+describe('AppDate', () => {
     it('should be able to set the corret date for something next year', () => {
         const result = date(28, 1, 2023)
 
