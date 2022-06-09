@@ -218,7 +218,7 @@ describe('get dates', () => {
     })
 
     it.each(['foo', '', 'asfdasd', 'alex'])(
-        "should return an empty erry for strings it doesn't understand '%s'",
+        "should return an empty arry for strings it doesn't understand '%s'",
         (string) => {
             const result = getDates(string, {
                 from: date(1, 6, 2022),
